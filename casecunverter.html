@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Case Converter</title>
+    <style>
+        /* Basic styling for the tool */
+        .converter-container {
+            font-family: Arial, sans-serif;
+            max-width: 900px; /* Increased max-width for better spacing */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column; /* Main container stacks clock and content vertically */
+            align-items: center; /* Centers the stacked items */
+            gap: 20px; /* Gap between clock section and converter sections */
+        }
+
+        /* Styling for the clock display section */
+        .clock-section-wrapper {
+            width: 100%; /* Take full width */
+            text-align: center; /* Center align clock and its title */
+            margin-bottom: 10px; /* Space below the clock section */
+        }
+
+        .clock-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px; /* Space below the clock title */
+        }
+
+        .clock-display {
+            font-size: 2.2em; /* Larger font size for time */
+            font-weight: bold;
+            color: #000; /* Black color for readability */
+            padding: 5px 0;
+            white-space: nowrap; /* Keep time components on one line */
+        }
+
+        .converter-flex {
+            display: flex;
+            gap: 30px; /* Gap between the two main sections */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            width: 100%; /* Occupy full width of its parent */
+            justify-content: center; /* Center align the flex items */
+        }
+
+        .converter-section {
+            flex: 1;
+            min-width: 380px; /* Minimum width for each section */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align items within the section */
+        }
+
+        .converter-section label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .converter-section textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid black;
+            border-radius: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 16px;
+            resize: none; /* Disable resizing for a fixed look */
+            background-color: #ffc0cb; /* Pink color for input */
+            color: #333;
+        }
+
+        .converter-result {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid black;
+            border-radius: 0;
+            overflow-y: auto;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 16px;
+            background-color: #b0e0e6; /* Light blue/lavender color for output */
+            color: #333;
+        }
+
+        .action-button {
+            background-color: transparent;
+            color: black;
+            padding: 10px 20px;
+            border: 2px solid black;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: bold;
+            width: fit-content; /* Adjust width to content */
+        }
+
+        .action-button:hover {
+            background-color: #eee;
+        }
+
+        /* New styles for case buttons */
+        .case-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center; /* Center the buttons */
+        }
+
+        .case-button {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .case-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .language-toggle-button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle-button:hover {
+            background-color: #4cae4c;
+        }
+
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 800px) {
+            .converter-flex {
+                flex-direction: column; /* Stack input/output vertically on smaller screens */
+                gap: 20px; /* Adjust gap for stacked items */
+            }
+            .converter-section {
+                min-width: unset; /* Remove min-width restriction on small screens */
+                width: 95%; /* Occupy more width on smaller screens */
+            }
+            .case-buttons {
+                flex-direction: column; /* Stack case buttons vertically on small screens */
+                align-items: center; /* Center stack buttons */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter-container">
+    <button class="language-toggle-button" id="languageToggleButton" onclick="toggleLanguage()">বাংলা / English</button>
+
+    <div class="clock-section-wrapper">
+        <div class="clock-title" id="clockTitle">Current Time:</div>
+        <div class="clock-display" id="realTimeClock"></div>
+    </div>
+
+    <div class="converter-flex">
+        <div class="converter-section">
+            <label for="inputData" id="inputLabel">Type or Paste Your Text:</label>
+            <textarea id="inputData" placeholder="Type or paste your text here..."></textarea>
+            <div class="case-buttons">
+                <button class="case-button" onclick="convertToCase('upper')" id="upperCaseButton">UPPER CASE</button>
+                <button class="case-button" onclick="convertToCase('lower')" id="lowerCaseButton">lower case</button>
+                <button class="case-button" onclick="convertToCase('capitalize')" id="capitalizeCaseButton">Capitalize Each Word</button>
+                <button class="case-button" onclick="convertToCase('sentence')" id="sentenceCaseButton">Sentence case</button>
+                <button class="case-button" onclick="convertToCase('alternating')" id="alternatingCaseButton">aLtErNaTiNg CaSe</button>
+                <button class="case-button" onclick="convertToCase('inverse')" id="inverseCaseButton">InVeRsE cAsE</button>
+            </div>
+            <button class="action-button" onclick="alert(languageData[currentLanguage].donationAlert)" id="donateButton">Click for Donation</button>
+        </div>
+
+        <div class="converter-section">
+            <label id="outputLabel">Converted Text:</label>
+            <div id="outputData" class="converter-result"></div>
+            <button class="action-button" onclick="copyToClipboard()" id="copyButton">Copy to Clipboard</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const inputData = document.getElementById('inputData');
+    const outputData = document.getElementById('outputData');
+    const realTimeClock = document.getElementById('realTimeClock');
+    const pageTitle = document.getElementById('pageTitle');
+    const clockTitle = document.getElementById('clockTitle');
+    const inputLabel = document.getElementById('inputLabel');
+    const outputLabel = document.getElementById('outputLabel');
+    const upperCaseButton = document.getElementById('upperCaseButton');
+    const lowerCaseButton = document.getElementById('lowerCaseButton');
+    const capitalizeCaseButton = document.getElementById('capitalizeCaseButton');
+    const sentenceCaseButton = document.getElementById('sentenceCaseButton');
+    const alternatingCaseButton = document.getElementById('alternatingCaseButton');
+    const inverseCaseButton = document.getElementById('inverseCaseButton');
+    const donateButton = document.getElementById('donateButton');
+    const copyButton = document.getElementById('copyButton');
+    const languageToggleButton = document.getElementById('languageToggleButton');
+
+    let currentLanguage = 'en'; // Default language is English
+
+    // Object to store localized text
+    const languageData = {
+        en: {
+            pageTitle: 'Case Converter',
+            clockTitle: 'Current Time:',
+            inputLabel: 'Type or Paste Your Text:',
+            inputPlaceholder: 'Type or paste your text here...',
+            outputLabel: 'Converted Text:',
+            upperCaseButton: 'UPPER CASE',
+            lowerCaseButton: 'lower case',
+            capitalizeCaseButton: 'Capitalize Each Word',
+            sentenceCaseButton: 'Sentence case',
+            alternatingCaseButton: 'aLtErNaTiNg CaSe',
+            inverseCaseButton: 'InVeRsE cAsE',
+            donateButton: 'Click for Donation',
+            copyButton: 'Copy to Clipboard',
+            copySuccessAlert: 'Text copied to clipboard!',
+            copyFailAlert: 'Failed to copy text. Please copy manually.',
+            noTextToCopyAlert: 'Nothing to copy!',
+            donationAlert: 'Donation button clicked! This can be linked to a donation page or script.'
+        },
+        bn: {
+            pageTitle: 'কেস কনভার্টার',
+            clockTitle: 'বর্তমান সময়:',
+            inputLabel: 'আপনার টেক্সট লিখুন:',
+            inputPlaceholder: 'এখানে আপনার টেক্সট টাইপ বা পেস্ট করুন...',
+            outputLabel: 'রূপান্তরিত টেক্সট:',
+            upperCaseButton: 'বড় হাতের অক্ষর',
+            lowerCaseButton: 'ছোট হাতের অক্ষর',
+            capitalizeCaseButton: 'প্রতিটি শব্দের প্রথম অক্ষর বড় করুন',
+            sentenceCaseButton: 'বাক্যের প্রথম অক্ষর বড় করুন',
+            alternatingCaseButton: 'একান্তর কেস',
+            inverseCaseButton: 'বিপরীত কেস',
+            donateButton: 'ডোনেশনের জন্য ক্লিক করুন',
+            copySuccessAlert: 'টেক্সট ক্লিপবোর্ডে কপি করা হয়েছে!',
+            copyFailAlert: 'টেক্সট কপি করতে ব্যর্থ। অনুগ্রহ করে ম্যানুয়ালি কপি করুন।',
+            noTextToCopyAlert: 'কপি করার কিছু নেই!',
+            donationAlert: 'ডোনেশন বাটন ক্লিক করা হয়েছে! এটি একটি ডোনেশন পেজ বা স্ক্রিপ্টের সাথে লিঙ্ক করা যেতে পারে।'
+        }
+    };
+
+    // Function to update the UI based on the selected language
+    function updateUI() {
+        pageTitle.textContent = languageData[currentLanguage].pageTitle;
+        clockTitle.textContent = languageData[currentLanguage].clockTitle;
+        inputLabel.textContent = languageData[currentLanguage].inputLabel;
+        inputData.placeholder = languageData[currentLanguage].inputPlaceholder;
+        outputLabel.textContent = languageData[currentLanguage].outputLabel;
+        upperCaseButton.textContent = languageData[currentLanguage].upperCaseButton;
+        lowerCaseButton.textContent = languageData[currentLanguage].lowerCaseButton;
+        capitalizeCaseButton.textContent = languageData[currentLanguage].capitalizeCaseButton;
+        sentenceCaseButton.textContent = languageData[currentLanguage].sentenceCaseButton;
+        alternatingCaseButton.textContent = languageData[currentLanguage].alternatingCaseButton;
+        inverseCaseButton.textContent = languageData[currentLanguage].inverseCaseButton;
+        donateButton.textContent = languageData[currentLanguage].donateButton;
+        copyButton.textContent = languageData[currentLanguage].copyButton;
+
+        // Update the lang attribute of the HTML tag
+        document.documentElement.lang = currentLanguage;
+    }
+
+    // Function to toggle language
+    function toggleLanguage() {
+        currentLanguage = (currentLanguage === 'en') ? 'bn' : 'en';
+        updateUI();
+    }
+
+    // Function to update the clock
+    function updateClock() {
+        const now = new Date();
+        const options = {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true // AM/PM format
+        };
+        realTimeClock.textContent = now.toLocaleTimeString('en-US', options);
+    }
+
+    // Function to copy text to clipboard
+    function copyToClipboard() {
+        const textToCopy = outputData.textContent;
+        if (textToCopy) {
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    console.log('Text copied to clipboard!');
+                    alert(languageData[currentLanguage].copySuccessAlert); // User feedback
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert(languageData[currentLanguage].copyFailAlert);
+                });
+        } else {
+            alert(languageData[currentLanguage].noTextToCopyAlert);
+        }
+    }
+
+    // Main function to convert text case
+    function convertToCase(caseType) {
+        const text = inputData.value;
+        let convertedText = '';
+
+        switch (caseType) {
+            case 'upper':
+                convertedText = text.toUpperCase();
+                break;
+            case 'lower':
+                convertedText = text.toLowerCase();
+                break;
+            case 'capitalize':
+                // Capitalize the first letter of each word
+                convertedText = text.split(' ').map(word => {
+                    if (word.length === 0) return '';
+                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                }).join(' ');
+                break;
+            case 'sentence':
+                // Capitalize the first letter of each sentence
+                convertedText = text.toLowerCase().replace(/(^\s*\w|[.?!]\s*\w)/g, function(c) {
+                    return c.toUpperCase();
+                });
+                break;
+            case 'alternating':
+                // Alternating case (aLtErNaTiNg)
+                convertedText = '';
+                for (let i = 0; i < text.length; i++) {
+                    convertedText += (i % 2 === 0) ? text.charAt(i).toLowerCase() : text.charAt(i).toUpperCase();
+                }
+                break;
+            case 'inverse':
+                // Inverse case (InVeRsE)
+                convertedText = '';
+                for (let i = 0; i < text.length; i++) {
+                    const char = text.charAt(i);
+                    if (char === char.toUpperCase()) {
+                        convertedText += char.toLowerCase();
+                    } else {
+                        convertedText += char.toUpperCase();
+                    }
+                }
+                break;
+            default:
+                convertedText = text; // No change if caseType is unknown
+        }
+        outputData.textContent = convertedText;
+    }
+
+    // Add event listener for input changes
+    inputData.addEventListener('input', () => {
+        // Automatically convert to a default case (e.g., lowercase) as user types,
+        // or clear output if nothing is typed initially.
+        if (inputData.value === '') {
+            outputData.textContent = '';
+        } else {
+            // For now, it will only convert when a button is clicked.
+        }
+    });
+
+    // Initial UI update, clock update and set interval
+    updateUI(); // Set initial language to English
+    updateClock();
+    setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
