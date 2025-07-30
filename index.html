@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Online Case Converter Tool - Convert Text to Uppercase, Lowercase, Title Case, Sentence Case | English & Bengali</title>
+    <meta name="description" content="Free online case converter tool to instantly change text to uppercase, lowercase, title case, sentence case, alternating case, and inverse case. Supports both English and Bengali.">
     <style>
         /* Basic styling for the tool */
         .converter-container {
@@ -149,7 +150,6 @@
             background-color: #4cae4c;
         }
 
-
         /* Responsive adjustments for smaller screens */
         @media (max-width: 800px) {
             .converter-flex {
@@ -170,6 +170,10 @@
 <body>
 
 <div class="converter-container">
+    <h1 id="mainHeading" style="text-align: center; color: #333; margin-bottom: 20px;">Online Text Case Converter</h1>
+    <div class="description-section" style="text-align: center; margin-bottom: 30px; line-height: 1.6;">
+        <p id="toolDescription"></p>
+    </div>
     <button class="language-toggle-button" id="languageToggleButton" onclick="toggleLanguage()">বাংলা / English</button>
 
     <div class="clock-section-wrapper">
@@ -217,14 +221,19 @@
     const donateButton = document.getElementById('donateButton');
     const copyButton = document.getElementById('copyButton');
     const languageToggleButton = document.getElementById('languageToggleButton');
+    const mainHeading = document.getElementById('mainHeading'); // নতুন: mainHeading DOM এলিমেন্ট
+    const toolDescription = document.getElementById('toolDescription'); // নতুন: toolDescription DOM এলিমেন্ট
+
 
     let currentLanguage = 'en'; // Default language is English
 
     // Object to store localized text
     const languageData = {
         en: {
-            pageTitle: 'Case Converter',
+            pageTitle: 'Online Case Converter Tool - Convert Text to Uppercase, Lowercase, Title Case, Sentence Case | English & Bengali',
             clockTitle: 'Current Time:',
+            mainHeading: 'Online Text Case Converter', // নতুন H1 টাইটেল
+            toolDescription: 'Our free online Case Converter tool helps you instantly transform your text into various cases like UPPERCASE, lowercase, Sentence case, Title Case, aLtErNaTiNg cAsE, and InVeRsE cAsE. Perfect for writers, students, and professionals needing quick text formatting. Supports both English and Bengali.', // নতুন বর্ণনা
             inputLabel: 'Type or Paste Your Text:',
             inputPlaceholder: 'Type or paste your text here...',
             outputLabel: 'Converted Text:',
@@ -242,8 +251,10 @@
             donationAlert: 'Donation button clicked! This can be linked to a donation page or script.'
         },
         bn: {
-            pageTitle: 'কেস কনভার্টার',
+            pageTitle: 'কেস কনভার্টার - অনলাইন টেক্সট রূপান্তর টুল | বড় হাতের, ছোট হাতের, বাক্যের প্রথম অক্ষর বড় করুন | ইংরেজি ও বাংলা',
             clockTitle: 'বর্তমান সময়:',
+            mainHeading: 'অনলাইন টেক্সট কেস কনভার্টার', // নতুন H1 টাইটেল
+            toolDescription: 'আমাদের বিনামূল্যের অনলাইন কেস কনভার্টার টুল আপনাকে তাৎক্ষণিকভাবে আপনার টেক্সটকে বিভিন্ন কেসে রূপান্তর করতে সাহায্য করে, যেমন বড় হাতের অক্ষর, ছোট হাতের অক্ষর, বাক্যের প্রথম অক্ষর বড় করা, প্রতিটি শব্দের প্রথম অক্ষর বড় করা, একান্তর কেস এবং বিপরীত কেস। লেখক, ছাত্র এবং পেশাদারদের জন্য দ্রুত টেক্সট ফরম্যাটিং এর জন্য এটি উপযুক্ত। ইংরেজি এবং বাংলা উভয় ভাষাই সমর্থন করে।', // নতুন বর্ণনা
             inputLabel: 'আপনার টেক্সট লিখুন:',
             inputPlaceholder: 'এখানে আপনার টেক্সট টাইপ বা পেস্ট করুন...',
             outputLabel: 'রূপান্তরিত টেক্সট:',
@@ -265,6 +276,8 @@
     function updateUI() {
         pageTitle.textContent = languageData[currentLanguage].pageTitle;
         clockTitle.textContent = languageData[currentLanguage].clockTitle;
+        mainHeading.textContent = languageData[currentLanguage].mainHeading; // H1 আপডেট
+        toolDescription.textContent = languageData[currentLanguage].toolDescription; // বর্ণনা আপডেট
         inputLabel.textContent = languageData[currentLanguage].inputLabel;
         inputData.placeholder = languageData[currentLanguage].inputPlaceholder;
         outputLabel.textContent = languageData[currentLanguage].outputLabel;
